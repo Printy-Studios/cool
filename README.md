@@ -1,0 +1,2 @@
+# cool
+ Shopify Theme

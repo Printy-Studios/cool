@@ -1,0 +1,30 @@
+{% assign base_height = 50 %}
+<div class='logo-container' id='{{ block.id }}'>
+    <img 
+        class='logo'
+        loading='lazy' 
+        src='{{ block.settings.img | image_url: height: 1000}}' width='' height='{{ base_height | times: block.settings.size}}'
+    >
+</div>
+
+
+{% style %}
+
+    .logo-container{
+        display: flex;
+        align-items: center;
+    }
+
+    #{{ block.id }} {
+        display: flex;
+        justify-content: {{ block.settings.justify_content }};
+    }
+
+    #{{ block.id }} > .logo {
+
+        {% if settings.border == true %}
+            border: {{ settings.border_thickness }}px {{ settings.border_style }} {{ settings.border_color | color_to_hex }};
+        {% endif %}
+    }
+
+{% endstyle %}

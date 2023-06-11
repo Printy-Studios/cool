@@ -1,0 +1,12 @@
+<nav class='nav-icons'>
+    {% if block.settings.cart_icon == true %}
+        {% render 'nav-icon' with block.settings.cart_icon_img as img %}
+    {% endif %}
+</nav>
+
+{% style %}
+    .nav-icons {
+        display: flex;
+        box-sizing: border-box;
+    }
+{% endstyle %}

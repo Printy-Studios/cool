@@ -1,0 +1,156 @@
+<nav class='nav-menu' id='{{ block.id }}'>
+    <!-- <div onclick='initDrawer(this)' class='hidden'>
+
+    </div> -->
+
+    {% assign opacity = block.settings.drawer_background_opacity %}
+    <input type='text' id='drawer-background-opacity' value='{% if opacity == 1 %}full{% else %}{{ opacity | remove: "0." }}{% endif %}' hidden>
+
+    <div onclick='toggleMenuDrawer(this)' class='nav-menu-mobile'>
+        <img loading='lazy' src='{{ block.settings.mobile_icon | image_url }}' width='48' height='48' />
+    </div>
+
+    <div class='nav-menu-drawer hidden'>
+        <!-- Background for nav drawer -->
+        <div class='nav-menu-drawer-background' onclick='toggleMenuDrawer(this)'>
+
+        </div>
+        <!-- Nav menu drawer links -->
+        <div class='nav-menu-list'>
+            {% for menu_item in block.settings.menu.links %}
+                <a class='nav-menu-item{% if menu_item.active == true %} nav-menu-item-active{% endif %}' href='{{ menu_item.url }}'>
+                    {{ menu_item.title }}
+                </a>
+            {% endfor %}
+        </div>
+        
+    </div>
+
+    <!--  -->
+</nav>
+
+<script>
+
+    let menu_drawer_is_open = false;
+
+    function toggleMenuDrawer( e ) {
+
+        console.log('clicked');
+        console.log(e);
+
+        const menu_element = e.closest('.nav-menu');
+
+        let drawer_background_opacity = menu_element.querySelector('#drawer-background-opacity').value;
+
+        const drawer_container_element = menu_element.parentElement.querySelector('.nav-menu-drawer');
+        const drawer_background_element = menu_element.parentElement.querySelector('.nav-menu-drawer-background');
+        const drawer_element = menu_element.parentElement.querySelector('.nav-menu-list');
+
+        console.log(drawer_element);
+
+        if ( ! menu_drawer_is_open ) {
+            drawer_container_element.classList.remove('hidden');
+
+            drawer_background_element.classList.add('fade-in-' + drawer_background_opacity);
+
+            drawer_element.classList.add('slide-in-left');
+            
+        } else {
+            
+            drawer_background_element.classList.remove('fade-in-' + drawer_background_opacity);
+            drawer_background_element.classList.add('fade-out-' + drawer_background_opacity);
+
+            drawer_element.classList.remove('slide-in-left');
+            drawer_element.classList.add('slide-out-left');
+
+            setTimeout(() => {
+                drawer_container_element.classList.add('hidden');
+
+                drawer_background_element.classList.remove('fade-out-' + drawer_background_opacity);
+
+                drawer_element.classList.remove('slide-out-left');
+            }, 580)
+
+
+            
+        }
+
+        menu_drawer_is_open = !menu_drawer_is_open;
+    }
+
+    function initDrawer() {
+        const drawer_element = e.parentElement.querySelector('.nav-menu-drawer');
+    }
+
+</script>
+
+{% style %}
+
+    {{ block.settings.font | font_face }}
+
+    .nav-menu {
+        display: flex;
+        align-items: center;
+    }
+
+    #{{ block.id }} {
+        flex-direction: {{ block.settings.direction }};
+        justify-content: {{ block.settings.justify_content }};
+        font-family: {{ block.settings.font.family }}, {{ block.settings.font.fallback_families}} !important;
+        gap: {{ block.settings.spacing }}px;
+    }
+
+    #{{ block.id }} .nav-menu-list {
+        padding: {{ block.settings.mobile_drawer_padding }}px;
+        background: {{ block.settings.drawer_color }};
+    }
+
+    #{{ block.id }} .nav-menu-item {
+        color: {{ block.settings.item_color }}
+    }
+
+    #{{ block.id }} .nav-menu-item-active {
+        color: {{ block.settings.active_item_color }}
+    }
+
+    .nav-link {
+        
+    }
+
+    .nav-menu-drawer {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        /* background: rgba(0, 0, 0, 0.7); */
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .nav-menu-drawer-background {
+        position: absolute;
+        z-index: 4;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: {{ block.settings.drawer_background_color }};
+        opacity: {{ block.settings.drawer_background_opacity }};
+    }
+
+    .nav-menu-list {
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: 100%;
+    }
+
+    @media screen and (min-width: 359px) {
+        #{{ block.id }} .nav-menu-list {
+            padding: {{ block.settings.drawer_padding }}px;
+        }
+    }
+
+{% endstyle %}
